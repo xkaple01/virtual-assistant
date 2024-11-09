@@ -1,9 +1,14 @@
 ### Virtual assistant
-- [x] Architecture: implemented as a **hierarchical state machine**.
-- [x] Backend: user data are stored in **NoSQL MongoDB** database.
-- [x] Fronend: written in Python using **Google Mesop**.
-- [x] Web Server: **WSGI GUnicorn**.
-- [x] Deployment: application **publically accessible** through internet.
+
+:white_check_mark: Architecture: implemented as a **hierarchical state machine**.
+
+:white_check_mark: Backend: user data are stored in **NoSQL MongoDB** database.
+
+:white_check_mark: Fronend: written in Python using **Google Mesop**.
+
+:white_check_mark: Web Server: **WSGI GUnicorn**.
+
+:white_check_mark: Deployment: application **publically accessible** through internet.
 
 ### Access
 Click the following [link](http://134.249.64.11:8080).
