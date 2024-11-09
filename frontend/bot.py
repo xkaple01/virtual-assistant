@@ -24,6 +24,7 @@ def page_body() -> None:
 
             me.text(text=f'{Commands.SHOW_USER.value}', style=STYLE_CMD)
             me.text(text=f'{Commands.SHOW_NOTES.value}', style=STYLE_CMD)
+            me.text(text=f'{Commands.SHOW_BIRTHDAYS.value}', style=STYLE_CMD)
             me.text(text=f'{Commands.SHOW_DATABASE.value}', style=STYLE_CMD_MB)
 
             me.text(text=f'{Commands.EXIT.value}', style=STYLE_CMD_MB)

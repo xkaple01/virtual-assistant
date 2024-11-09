@@ -4,7 +4,7 @@ from enum import Enum
 
 from backend.state_machine.state import State
 from backend.state_machine.database.manager import database_manager
-from backend.state_machine.validation import pattern_username
+from backend.state_machine.database.validation import IOError, pattern_username
 
 
 class StagesShowUser(Enum):
@@ -19,16 +19,21 @@ def interact_show_user(user_input: str) -> str:
             input_username: str = user_input
 
             if re.fullmatch(pattern=pattern_username, string=input_username) is None:
-                raise ValueError('Provided username is not valid.')
+                raise IOError(
+                    'Provided username does not satisfy requirements. \n\n'
+                )
             
             state.username = input_username
             report: str = database_manager.show_user(username=state.username)
 
-            report += 'Enter one of the available interactive commands to proceed. \n\n'
+            report += (
+                'Enter one of the available '
+                'interactive commands to proceed. \n\n'
+            )
             
             state.reset()
             
             return report
         
         case _:
-            raise ValueError('Unrecognized stage.')
+            raise IOError('Unrecognized stage. \n\n')

@@ -3,12 +3,14 @@ import mesop.labs as mel
 from enum import Enum
 
 from backend.state_machine.state import State
+from backend.state_machine.database.validation import IOError
 from backend.state_machine.add_user import StagesAddUser, interact_add_user
 from backend.state_machine.remove_user import StagesRemoveUser, interact_remove_user
 from backend.state_machine.add_note import StagesAddNote, interact_add_note
 from backend.state_machine.remove_note import StagesRemoveNote, interact_remove_note
 from backend.state_machine.show_user import StagesShowUser, interact_show_user
 from backend.state_machine.show_notes import StagesShowNotes, interact_show_notes
+from backend.state_machine.show_birthdays import StagesShowBirthdays, interact_show_birthdays
 from backend.state_machine.show_database import StagesShowDatabase, interact_show_database
 
 
@@ -25,6 +27,7 @@ class Commands(Enum):
 
     SHOW_USER = 'show-user'
     SHOW_NOTES = 'show-notes'
+    SHOW_BIRTHDAYS = 'show-birthdays'
     SHOW_DATABASE = 'show-database'
 
     EXIT = 'exit'
@@ -71,7 +74,7 @@ def detect_command(user_input: str) -> None:
             return (
                 'Follow steps below '
                 'to add the new note to the database. \n\n'
-                '1. Enter the username of note author present in the database. \n\n'
+                '1. Enter the username of note author. \n\n'
                 'Example: Username1 \n\n'
                 'Username can contain only letters A-z and digits 0-9. \n\n'
             )
@@ -82,7 +85,7 @@ def detect_command(user_input: str) -> None:
             return (
                 'Follow steps below ' 
                 'to remove an existing note from the database. \n\n'
-                '1. Enter the username of note author present in the database. \n\n'
+                '1. Enter the username of note author. \n\n'
                 'Example: Username1 \n\n'
                 'Username can contain only letters A-z and digits 0-9. \n\n'
             )
@@ -91,7 +94,7 @@ def detect_command(user_input: str) -> None:
             state.command = Commands.SHOW_USER.value
             state.stage = StagesShowUser.GET_USERNAME_END_DIALOG.value
             return (
-                'Provide the following data items '
+                'Follow instructions '
                 'to get detailed information '
                 'about the user present in the database. \n\n'
                 '1. Enter an exising username. \n\n'
@@ -103,32 +106,44 @@ def detect_command(user_input: str) -> None:
             state.command = Commands.SHOW_NOTES.value
             state.stage = StagesShowNotes.GET_USERNAME_END_DIALOG.value
             return (
-                'Provide the following data items '
+                'Follow instructions '
                 'to display the notes written by a specified user. \n\n'
-                '1. Enter an existing username. \n\n'
+                '1. Enter the username of note author. \n\n'
                 'Example: Username1 \n\n'
                 'Username can contain only letters A-z and digits 0-9. \n\n'
             )
 
+        case _ if Commands.SHOW_BIRTHDAYS.value in cmd:
+            state.command = Commands.SHOW_BIRTHDAYS.value
+            state.stage = StagesShowBirthdays.GET_NUMBER_END_DIALOG.value
+            return (
+                'Follow instructions '
+                'to get the list of users '
+                'whose birthday celebrations will occur in the nearest future. \n\n'
+                '1. Enter the number of days from today. \n\n'
+                'Example: 30 \n\n'
+                'Number of days must be an integer from 1 to 365. \n\n'
+            )
+        
         case _ if Commands.SHOW_DATABASE.value in cmd:
             state.command = Commands.SHOW_DATABASE.value
             state.stage = StagesShowDatabase.GET_NUMBER_END_DIALOG.value
             return (
-                'Provide the following data items '
+                'Follow instructions '
                 'to get the usernames recently added to the database. \n\n'
                 '1. Enter the maximum number usernames to be displayed. \n\n'
                 'Example: 10 \n\n'
-                'Number of users must be an integer from 1 to 100. \n\n'
+                'Number of users must be integer from 1 to 100. \n\n'
             )
         
         case _ if Commands.EXIT.value in cmd:
             return (
                 'Goodbye! '
-                'You can refresh the page to start the new conversation.'
+                'You can refresh the page to start the new conversation. \n\n'
             )
             
         case _:
-            return f'Please, enter one of the available interactive commands.'
+            return f'Please, enter one of the available interactive commands. \n\n'
 
 
 def transform(user_input: str, history: list[mel.ChatMessage]) -> str:
@@ -150,14 +165,26 @@ def transform(user_input: str, history: list[mel.ChatMessage]) -> str:
                 return interact_show_user(user_input=user_input)
             case Commands.SHOW_NOTES.value:
                 return interact_show_notes(user_input=user_input)
+            case Commands.SHOW_BIRTHDAYS.value:
+                return interact_show_birthdays(user_input=user_input)
             case Commands.SHOW_DATABASE.value:
                 return interact_show_database(user_input=user_input)
             case _:
-                raise ValueError('Unrecognized command.')
-    except:
+                raise IOError('Unrecognized command. \n\n')
+            
+    except Exception as e:
         state.reset()
-        return (
-            'Provided data items do not satisfy requirements. '
-            'To repeat the procedure '
-            'please enter one of the available interactive commands '
+
+        report: str = ''
+
+        if isinstance(e, IOError):
+            report += f'{str(e)} '
+        else:
+            report += 'Provided data items do not satisfy requirements. '
+
+        report += (
+            'Please enter one of the available '
+            'interactive commands to proceed. \n\n'
         )
+        
+        return report

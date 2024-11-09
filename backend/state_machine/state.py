@@ -9,6 +9,7 @@ class State:
     username: str = ''
     email: str = ''
     phone: str = ''
+    birthday: str = ''
     
     note_title: str = ''
     note_content: str = ''
@@ -20,6 +21,7 @@ class State:
         self.username = ''
         self.email = ''
         self.phone = ''
+        self.birthday = ''
 
         self.note_title = ''
         self.note_content = ''

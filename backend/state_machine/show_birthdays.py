@@ -6,27 +6,27 @@ from backend.state_machine.database.validation import IOError
 from backend.state_machine.database.manager import database_manager
 
 
-class StagesShowDatabase(Enum):
+class StagesShowBirthdays(Enum):
     GET_NUMBER_END_DIALOG = 0
 
 
-def interact_show_database(user_input: str) -> str:
+def interact_show_birthdays(user_input: str) -> str:
     state: State = me.state(state=State)
 
     match state.stage:
-        case StagesShowDatabase.GET_NUMBER_END_DIALOG.value:
+        case StagesShowBirthdays.GET_NUMBER_END_DIALOG.value:
             try:
                 input_number: int = int(user_input)
             except:
                 raise IOError('Provided input must be an integer number. \n\n')
 
-            if input_number < 1 or input_number > 100:
+            if input_number < 1 or input_number > 365:
                 raise IOError(
-                    'Provided number must belong to interval [1; 100]. \n\n'
+                    'Provided number must belong to interval [1; 365] \n\n'
                 )
             
-            report: str = database_manager.show_database(
-                num_recent_records=input_number
+            report: str = database_manager.show_birthdays(
+                num_days_ahead=input_number
             )
 
             report += (
