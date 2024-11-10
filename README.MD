@@ -6,7 +6,7 @@
 :white_check_mark: Deployment: application **publically available** on the internet via secure https connection.
 
 ### Access
-Open website [link](https://team-ai.cloud)
+Open website [https://team-ai.cloud](https://team-ai.cloud)
 
 Virtual assistant appears.
 
