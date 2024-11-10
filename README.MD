@@ -3,12 +3,10 @@
 :white_check_mark: Backend: user data maintained in **NoSQL MongoDB** database. \
 :white_check_mark: Fronend: written in Python using **Google Mesop**. \
 :white_check_mark: Web Server: **WSGI GUnicorn**. \
-:white_check_mark: Deployment: application **publically accessible** through internet.
+:white_check_mark: Deployment: application **publically available** on the internet via secure https connection.
 
 ### Access
-Click the following [link](http://134.249.64.11:8080).
-
-When the page is accessed the first time a security warning should appear. Click 'Continue to site'.
+Open website [link](https://team-ai.cloud)
 
 Virtual assistant appears.
 
