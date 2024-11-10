@@ -150,9 +150,9 @@ class DatabaseManager:
             f'User {username} is the authour of the following notes. \n\n'
         )
 
-        for i, note in enumerate(notes):
+        for note in notes:
             if note is not None:
-                report += f'{i + 1}. Title: {note['title']} \n\n'
+                report += f'- Title: {note['title']} \n\n'
                 report += f'- Content: {note['content']} \n\n'
 
         return report
