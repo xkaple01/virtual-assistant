@@ -1,1 +1,6 @@
 *__pycache__*
+cert.pem
+chain.pem
+fullchain.pem
+privkey.pem
+run.sh
