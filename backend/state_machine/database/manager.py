@@ -87,10 +87,10 @@ class DatabaseManager:
                 'username': username,
                 'notes': {'$elemMatch': {'title': title}}
             },
-            update={'$unset': {'notes.$': ''}}
+            update={'$pull': {'notes': {'title': title}}}
         )
 
-        if result.matched_count == 1:
+        if result.modified_count == 1:
             return (
                 'Note with provided title '
                 'successfully removed from the database. \n\n'
@@ -143,9 +143,6 @@ class DatabaseManager:
         if len(notes) == 0:
             raise IOError(f'User {username} has no notes yet. \n\n')
         
-        if notes[0] is None:
-            raise (f'All notes of user {username} were removed. \n\n')
-
         report: str = (
             f'User {username} is the authour of the following notes. \n\n'
         )
